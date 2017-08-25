@@ -1,6 +1,6 @@
 # SvgImageSource for Xamarin.Forms
 
-This is a package to add SvgImageSource to Xamarin.Forms as new ImageSource. Thereby Xamarin.Forms.Image will become able to display a SVG image without specify modified.
+This is a package to add SvgImageSource to Xamarin.Forms as new ImageSource. Thereby Xamarin.Forms.Image will become able to display a SVG image without particular modified.
 
 **Now version is pre release.**  
 Using this library have to install more than or equal Xamarin.Forms 2.4.0.266 -pre1.

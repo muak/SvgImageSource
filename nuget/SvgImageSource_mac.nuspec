@@ -9,7 +9,7 @@
         <projectUrl>https://github.com/muak/SvgImageSource</projectUrl>
         <licenseUrl>https://github.com/muak/SvgImageSource/blob/master/LICENSE.txt</licenseUrl>
         <requireLicenseAcceptance>false</requireLicenseAcceptance>
-        <description>This is a package to add SvgImageSource to Xamarin.Forms as new ImageSource. Thereby Xamarin.Forms.Image will become able to display a SVG image without specify modified.</description>
+        <description>This is a package to add SvgImageSource to Xamarin.Forms as new ImageSource. Thereby Xamarin.Forms.Image will become able to display a SVG image without particular modified.</description>
         <summary></summary>
         <releaseNotes></releaseNotes>
         <tags>Xamarin.Forms SVG Image ImageSource</tags>
