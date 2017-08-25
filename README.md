@@ -7,6 +7,8 @@ Using this library have to install more than or equal Xamarin.Forms 2.4.0.266 -p
 
 ## Nuget Installation
 
+https://www.nuget.org/packages/Xamarin.Forms.Svg/
+
 ```bash
 Install-Package Xamain.Forms.Svg -pre
 ```
