@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+    <metadata>
+        <id>Xamarin.Forms.Svg</id>
+        <version>0.0.1-pre</version>
+        <title>SvgImageSource for Xamarin.Forms</title>
+        <authors>kamu</authors>
+        <owners>kamu</owners>
+        <projectUrl>https://github.com/muak/SvgImageSource</projectUrl>
+        <licenseUrl>https://github.com/muak/SvgImageSource/blob/master/LICENSE.txt</licenseUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>This is a package to add SvgImageSource to Xamarin.Forms as new ImageSource. Thereby Xamarin.Forms.Image will become able to display a SVG image without specify modified.</description>
+        <summary></summary>
+        <releaseNotes></releaseNotes>
+        <tags>Xamarin.Forms SVG Image ImageSource</tags>
+        <language>en-US</language>
+        <dependencies>
+			<!-- <group targetFramework="netstandard1.4">
+				<dependency id="Xamarin.Forms" version="2.4.0" />
+				<dependency id="NGraphics" version="0.4.0" />
+			</group> -->
+            <group targetFramework="portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10">
+                <dependency id="Xamarin.Forms" version="2.4.0" />
+				<dependency id="NGraphics" version="0.4.0" />
+            </group>
+            <group targetFramework="MonoAndroid">
+                <dependency id="Xamarin.Forms" version="2.4.0" />
+				<dependency id="NGraphics" version="0.4.0" />
+            </group>
+            <group targetFramework="MonoTouch">
+                <dependency id="Xamarin.Forms" version="2.4.0" />
+				<dependency id="NGraphics" version="0.4.0" />
+            </group>
+        </dependencies>
+    </metadata>
+    <files>
+		<!-- .net standard1.4 was too early for humanity -->
+		<!-- <file src="../SvgImageSource/bin/Release/SvgImageSource.dll" target="lib/netstandard1.4" />
+		<file src="../SvgImageSource/bin/Release/SvgImageSource.xml" target="lib/netstandard1.4" />
+		<file src="../SvgImageSource/bin/Release/SvgImageSource.pdb" target="lib/netstandard1.4" /> -->
+		
+        <!-- PCL -->
+        <file src="../SvgImageSource/bin/Release/SvgImageSource.dll" target="lib/portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10" />
+		<file src="../SvgImageSource/bin/Release/SvgImageSource.xml" target="lib/portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10" />
+		<file src="../SvgImageSource/bin/Release/SvgImageSource.pdb" target="lib/portable-win+net45+wp80+win81+wpa81+MonoAndroid10+MonoTouch10+Xamarin.iOS10" />
+		
+        <!-- Mono.Android -->
+        <file src="../SvgImageSource/bin/Release/SvgImageSource.dll" target="lib/MonoAndroid" />
+		<file src="../SvgImageSource/bin/Release/SvgImageSource.xml" target="lib/MonoAndroid" />
+		<file src="../SvgImageSource/bin/Release/SvgImageSource.pdb" target="lib/MonoAndroid" />
+        <file src="../SvgImageSource.Droid/bin/Release/SvgImageSource.Droid.dll" target="lib/MonoAndroid" />
+		<file src="../SvgImageSource.Droid/bin/Release/SvgImageSource.Droid.xml" target="lib/MonoAndroid" />
+		<file src="../SvgImageSource.Droid/bin/Release/SvgImageSource.Droid.pdb" target="lib/MonoAndroid" />
+		
+        <!-- Mono.Touch -->
+        <file src="../SvgImageSource/bin/Release/SvgImageSource.dll" target="lib/MonoTouch" />
+		<file src="../SvgImageSource/bin/Release/SvgImageSource.xml" target="lib/MonoTouch" />
+		<file src="../SvgImageSource/bin/Release/SvgImageSource.pdb" target="lib/MonoTouch" />
+        <file src="../SvgImageSource.iOS/bin/Release/SvgImageSource.iOS.dll" target="lib/MonoTouch" />
+		<file src="../SvgImageSource.iOS/bin/Release/SvgImageSource.iOS.xml" target="lib/MonoTouch" />
+		<file src="../SvgImageSource.iOS/bin/Release/SvgImageSource.iOS.pdb" target="lib/MonoTouch" />
+		
+        <!-- Xamarin.iOS10 -->
+        <file src="../SvgImageSource/bin/Release/SvgImageSource.dll" target="lib/Xamarin.iOS10" />
+		<file src="../SvgImageSource/bin/Release/SvgImageSource.xml" target="lib/Xamarin.iOS10" />
+		<file src="../SvgImageSource/bin/Release/SvgImageSource.pdb" target="lib/Xamarin.iOS10" />
+        <file src="../SvgImageSource.iOS/bin/Release/SvgImageSource.iOS.dll" target="lib/Xamarin.iOS10" />
+		<file src="../SvgImageSource.iOS/bin/Release/SvgImageSource.iOS.xml" target="lib/Xamarin.iOS10" />
+		<file src="../SvgImageSource.iOS/bin/Release/SvgImageSource.iOS.pdb" target="lib/Xamarin.iOS10" />
+    </files>
+</package>
