@@ -1,4 +1,5 @@
 ﻿using System;
+using Android.Content;
 
 namespace Xamarin.Forms.Svg.Droid
 {
@@ -10,9 +11,14 @@ namespace Xamarin.Forms.Svg.Droid
         /// <summary>
         /// Init this instance.
         /// </summary>
-        public static void Init()
+        public static void Init(Context context)
         {
             Internals.Registrar.Registered.Register(typeof(SvgImageSource), typeof(SvgImageSourceHandler));
+
+            using (var display = context.Resources.DisplayMetrics)
+            {
+                SvgImageSource.ScreenScale = display.Density;
+            }
         }
     }
 }

@@ -1,22 +1,27 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ContentPage xmlns="http://xamarin.com/schemas/2014/forms" 
-	xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
-	xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml" 
+    xmlns:prism="clr-namespace:Prism.Mvvm;assembly=Prism.Forms" 
     xmlns:svg="clr-namespace:Xamarin.Forms.Svg;assembly=SvgImageSource"
-	prism:ViewModelLocator.AutowireViewModel="True" 
-	x:Class="Sample.Views.MainPage" Title="MainPage">
-	<StackLayout>
+    prism:ViewModelLocator.AutowireViewModel="True" 
+    x:Class="Sample.Views.MainPage" Title="MainPage">
+    <ScrollView>
+    <StackLayout>
         <Button Text="Change" Command="{Binding ChangeCommand}" />
-		<Image Source="{Binding Image}"  />
-       <!-- <Image>
-            <Image.Source>
-                <svg:SvgImageSource Resource="tiger.svg" />
-            </Image.Source>
-        </Image>-->
-        <TableView>
+        <Image Source="{Binding Image.Value}" HeightRequest="100" Aspect="AspectFit" />
+        <Image Source="{Binding Image2.Value}" HeightRequest="50" Aspect="AspectFit" />
+        <TableView VerticalOptions="FillAndExpand">
             <TableSection Title="テスト">
-                <ImageCell ImageSource="{Binding Image}" Text="Svgですよ" />
+                <ImageCell ImageSource="{Binding Image3.Value}" Text="Svgですよ" />
+                <ImageCell ImageSource="{Binding Image4.Value}" Text="Svgですよ" />
+                <ImageCell ImageSource="{Binding Image5.Value}" Text="Svgですよ" />
+                <ImageCell ImageSource="{Binding Image6.Value}" Text="Svgですよ" />
+                <ImageCell ImageSource="{Binding Image7.Value}" Text="Svgですよ" />
+                <ImageCell ImageSource="{Binding Image8.Value}" Text="Svgですよ" />
+                <ImageCell ImageSource="{Binding Image9.Value}" Text="Svgですよ" />
+                <ImageCell ImageSource="{Binding Image10.Value}" Text="Svgですよ" />
             </TableSection>
         </TableView>
-	</StackLayout> 
+    </StackLayout> 
+    </ScrollView>
 </ContentPage>
