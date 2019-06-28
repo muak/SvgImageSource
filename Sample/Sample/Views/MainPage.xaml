@@ -8,7 +8,12 @@
     <ScrollView>
     <StackLayout>
         <Button Text="Change" Command="{Binding ChangeCommand}" />
-        <Image Source="{Binding Image.Value}" HeightRequest="100" Aspect="AspectFit" />
+        <Image HeightRequest="50" WidthRequest="50">
+            <Image.Source>
+                <svg:SvgImageSource Source="{Binding ImagePath.Value}" Width="50" Height="50" Color="Blue" />
+            </Image.Source>     
+        </Image>
+        <!--<Image Source="{Binding Image.Value}" HeightRequest="100" Aspect="AspectFit" />
         <Image Source="{Binding Image2.Value}" HeightRequest="50" Aspect="AspectFit" />
         <TableView VerticalOptions="FillAndExpand">
             <TableSection Title="テスト">
@@ -21,7 +26,7 @@
                 <ImageCell ImageSource="{Binding Image9.Value}" Text="Svgですよ" />
                 <ImageCell ImageSource="{Binding Image10.Value}" Text="Svgですよ" />
             </TableSection>
-        </TableView>
+        </TableView>-->
     </StackLayout> 
     </ScrollView>
 </ContentPage>

@@ -11,9 +11,6 @@
     <PackageReference Include="SkiaSharp.Svg" Version="1.60.0" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\SvgImageSource\SvgImageSource.csproj" />
-  </ItemGroup>
-  <ItemGroup>
     <Folder Include="Resources\" />
   </ItemGroup>
   <ItemGroup>
@@ -29,5 +26,8 @@
     <EmbeddedResource Include="Resources\ios-star.svg" />
     <EmbeddedResource Include="Resources\icon.png" />
     <EmbeddedResource Include="Resources\flower.jpg" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\..\SvgImageSource\SvgImageSource.csproj" />
   </ItemGroup>
 </Project>

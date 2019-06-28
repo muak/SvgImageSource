@@ -5,6 +5,11 @@
     <RootNamespace>Xamarin.Forms.Svg</RootNamespace>
   </PropertyGroup>
 
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>portable</DebugType>
+    <DocumentationFile>bin\Release\netstandard2.0\SvgImageSource.xml</DocumentationFile>
+  </PropertyGroup>
   <ItemGroup>
 	<PackageReference Include="Xamarin.Forms" Version="3.0.0.482510" />
 	<PackageReference Include="SkiaSharp.Svg" Version="1.60.0" />

@@ -18,7 +18,7 @@ namespace Sample.Droid
 
 			global::Xamarin.Forms.Forms.Init(this, bundle);
 
-            Xamarin.Forms.Svg.Droid.SvgImage.Init(this);
+            Xamarin.Forms.Svg.Droid.SvgImage.Init();
 
 			LoadApplication(new App(new AndroidInitializer()));
 		}

@@ -10,9 +10,16 @@ namespace Xamarin.Forms.Svg
     /// </summary>
     public static class SvgUtility
     {
+        /// <summary>
+        /// Creates the image.
+        /// </summary>
+        /// <returns>The image.</returns>
+        /// <param name="stream">Stream.</param>
+        /// <param name="width">Width.</param>
+        /// <param name="height">Height.</param>
+        /// <param name="color">Color.</param>
         public static Task<Stream> CreateImage(Stream stream, double width, double height, Color color)
         {
-
             var screenScale = SvgImageSource.ScreenScale;
 
             var svg = new SkiaSharp.Extended.Svg.SKSvg();
@@ -45,11 +52,23 @@ namespace Xamarin.Forms.Svg
             }
         }
 
+        /// <summary>
+        /// Tos the SKC olor.
+        /// </summary>
+        /// <returns>The SKC olor.</returns>
+        /// <param name="color">Color.</param>
         public static SKColor ToSKColor(Color color)
         {
             return new SKColor((byte)(color.R * 255), (byte)(color.G * 255), (byte)(color.B * 255), (byte)(color.A * 255));
         }
 
+        /// <summary>
+        /// Calculates the size.
+        /// </summary>
+        /// <returns>The size.</returns>
+        /// <param name="size">Size.</param>
+        /// <param name="width">Width.</param>
+        /// <param name="height">Height.</param>
         public static SKSize CalcSize(SkiaSharp.SKSize size, double width, double height)
         {
             double w;
