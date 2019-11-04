@@ -282,17 +282,16 @@ namespace Xamarin.Forms.Svg
         {
             return token => Task.Run(async () =>
             {
-                using (var response = await _httpClient.GetAsync(uri, token))
+                var response = await _httpClient.GetAsync(uri, token);
+                if (!response.IsSuccessStatusCode)
                 {
-                    if (!response.IsSuccessStatusCode)
-                    {
-                        Log.Warning("HTTP Request", $"Could not retrieve {uri}, status code {response.StatusCode}");
-                        return null;
-                    }
-                    return await response.Content.ReadAsStreamAsync();
+                    Log.Warning("HTTP Request", $"Could not retrieve {uri}, status code {response.StatusCode}");
+                    return null;
                 }
+                // the HttpResponseMessage needs to be disposed of after the calling code is done with the stream 
+                // otherwise the stream may get disposed before the caller can use it
+                return new StreamWrapper(await response.Content.ReadAsStreamAsync().ConfigureAwait(false), response) as Stream;
             }, token);
-
         }
 
         static string GetRealResource(string resource)
