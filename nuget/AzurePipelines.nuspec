@@ -1,0 +1,79 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
+    <metadata>
+        <id>Xamarin.Forms.Svg</id>
+        <version>1.0.0</version>
+        <title>SvgImageSource for Xamarin.Forms</title>
+        <authors>kamu</authors>
+        <owners>kamu</owners>
+        <projectUrl>https://github.com/muak/SvgImageSource</projectUrl>
+        <licenseUrl>https://github.com/muak/SvgImageSource/blob/master/LICENSE.txt</licenseUrl>
+        <requireLicenseAcceptance>false</requireLicenseAcceptance>
+        <description>This is a package that adds SvgImageSource to Xamarin.Forms as new ImageSource. Thereby Xamarin.Forms.Image will can be displayed a SVG image without  modified.</description>
+        <summary></summary>
+        <releaseNotes>
+## New Features
+
+* .NETStandard2.0 Supported
+* Svg Uri Supported
+* Svg Stream Supported
+
+## Breaking changes
+
+* Renderering library is changed from NGraphics to SkiaSharp.
+* Resource property name is changed to "Source" in SvgImageSource.
+* Init method 1st argument must be set Context on Android.
+
+## Bug fixes
+
+* Fixed SVG from URI not loading #5.
+
+        </releaseNotes>
+        <tags>Xamarin.Forms TableView Cell Setting Configuration Option ListView UITableView RecyclerView ReOrder DragDrop</tags>
+        <language>en-US</language>
+        <dependencies>
+            <group targetFramework="netstandard2.0">
+                <dependency id="Xamarin.Forms" version="3.0.0.482510" />
+                <dependency id="SkiaSharp.Svg" version="1.60.0" />
+            </group>
+            <group targetFramework="MonoAndroid">
+                <dependency id="Xamarin.Forms" version="3.0.0.482510" />
+                <dependency id="SkiaSharp.Svg" version="1.60.0" />
+            </group>
+            <group targetFramework="MonoTouch">
+                <dependency id="Xamarin.Forms" version="3.0.0.482510" />
+                <dependency id="SkiaSharp.Svg" version="1.60.0" />
+            </group>
+        </dependencies>
+    </metadata>
+    <files>
+        <!-- .net standard2.0 -->
+        <file src="SvgImageSource.dll" target="lib/netstandard2.0" />
+        <file src="SvgImageSource.xml" target="lib/netstandard2.0" />
+        <file src="SvgImageSource.pdb" target="lib/netstandard2.0" />
+        
+        <!-- Mono.Android -->
+        <file src="SvgImageSource.dll" target="lib/MonoAndroid" />
+        <file src="SvgImageSource.xml" target="lib/MonoAndroid" />
+        <file src="SvgImageSource.pdb" target="lib/MonoAndroid" />
+        <file src="SvgImageSource.Droid.dll" target="lib/MonoAndroid" />
+        <file src="SvgImageSource.Droid.xml" target="lib/MonoAndroid" />
+        <file src="SvgImageSource.Droid.pdb" target="lib/MonoAndroid" />
+        
+        <!-- Mono.Touch -->
+        <file src="SvgImageSource.dll" target="lib/MonoTouch" />
+        <file src="SvgImageSource.xml" target="lib/MonoTouch" />
+        <file src="SvgImageSource.pdb" target="lib/MonoTouch" />
+        <file src="SvgImageSource.iOS.dll" target="lib/MonoTouch" />
+        <file src="SvgImageSource.iOS.xml" target="lib/MonoTouch" />
+        <file src="SvgImageSource.iOS.pdb" target="lib/MonoTouch" />
+        
+        <!-- Xamarin.iOS10 -->
+        <file src="SvgImageSource.dll" target="lib/Xamarin.iOS10" />
+        <file src="SvgImageSource.xml" target="lib/Xamarin.iOS10" />
+        <file src="SvgImageSource.pdb" target="lib/Xamarin.iOS10" />
+        <file src="SvgImageSource.iOS.dll" target="lib/Xamarin.iOS10" />
+        <file src="SvgImageSource.iOS.xml" target="lib/Xamarin.iOS10" />
+        <file src="SvgImageSource.iOS.pdb" target="lib/Xamarin.iOS10" />
+    </files>
+</package>
