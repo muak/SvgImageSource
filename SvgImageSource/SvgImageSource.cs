@@ -1,16 +1,65 @@
 ﻿using System;
-using System.Reflection;
-using System.Threading.Tasks;
 using System.IO;
 using System.Linq;
+using System.Net.Http;
+using System.Reflection;
+using System.Threading;
+using System.Threading.Tasks;
+using Xamarin.Forms.Internals;
 
 namespace Xamarin.Forms.Svg
 {
     /// <summary>
     /// Svg image source.
     /// </summary>
-    public class SvgImageSource : StreamImageSource, ISvgImageSource
+    public class SvgImageSource : ImageSource
     {
+        internal static float ScreenScale;
+
+        /// <summary>
+        /// The stream func property.
+        /// </summary>
+        public static BindableProperty StreamFuncProperty =
+            BindableProperty.Create(
+                nameof(StreamFunc),
+                typeof(Func<CancellationToken, Task<Stream>>),
+                typeof(SvgImageSource),
+                default(Func<CancellationToken, Task<Stream>>),
+                defaultBindingMode: BindingMode.OneWay
+            );
+
+        /// <summary>
+        /// Gets or sets the stream func.
+        /// </summary>
+        /// <value>The stream func.</value>
+        public Func<CancellationToken, Task<Stream>> StreamFunc
+        {
+            get { return (Func<CancellationToken, Task<Stream>>)GetValue(StreamFuncProperty); }
+            set { SetValue(StreamFuncProperty, value); }
+        }
+
+        /// <summary>
+        /// The source property.
+        /// </summary>
+        public static BindableProperty SourceProperty =
+            BindableProperty.Create(
+                nameof(Source),
+                typeof(string),
+                typeof(SvgImageSource),
+                default(string),
+                defaultBindingMode: BindingMode.OneWay
+            );
+
+        /// <summary>
+        /// Gets or sets the source.
+        /// </summary>
+        /// <value>The source.</value>
+        public string Source
+        {
+            get { return (string)GetValue(SourceProperty); }
+            set { SetValue(SourceProperty, value); }
+        }
+
         /// <summary>
         /// The width property.
         /// </summary>
@@ -27,7 +76,8 @@ namespace Xamarin.Forms.Svg
         /// Gets or sets the width.
         /// </summary>
         /// <value>The width.</value>
-        public double Width {
+        public double Width
+        {
             get { return (double)GetValue(WidthProperty); }
             set { SetValue(WidthProperty, value); }
         }
@@ -48,7 +98,8 @@ namespace Xamarin.Forms.Svg
         /// Gets or sets the height.
         /// </summary>
         /// <value>The height.</value>
-        public double Height {
+        public double Height
+        {
             get { return (double)GetValue(HeightProperty); }
             set { SetValue(HeightProperty, value); }
         }
@@ -69,48 +120,16 @@ namespace Xamarin.Forms.Svg
         /// Gets or sets the color.
         /// </summary>
         /// <value>The color.</value>
-        public Color Color {
+        public Color Color
+        {
             get { return (Color)GetValue(ColorProperty); }
             set { SetValue(ColorProperty, value); }
         }
 
-        /// <summary>
-        /// The resource property.
-        /// </summary>
-        public static BindableProperty ResourceProperty =
-            BindableProperty.Create(
-                nameof(Resource),
-                typeof(string),
-                typeof(SvgImageSource),
-                default(string),
-                defaultBindingMode: BindingMode.OneWay,
-                propertyChanged: OnResourceChanged
-            );
-
-        /// <summary>
-        /// Gets or sets the resource.
-        /// </summary>
-        /// <value>The resource.</value>
-        public string Resource {
-            get { return (string)GetValue(ResourceProperty); }
-            set { SetValue(ResourceProperty, value); }
-        }
-
-        static void OnResourceChanged(BindableObject bindable, object oldValue, object newValue)
-        {
-            if (oldValue != newValue)
-            {
-                if (AssemblyCache == null) return;
-
-                var svgImageSource = bindable as SvgImageSource;
-                var resource = GetRealResource((string)newValue);
-                Func<Stream> streamFunc = () => AssemblyCache.GetManifestResourceStream(resource);
-
-                svgImageSource.Stream = token => Task.Run(streamFunc, token);
-            }
-        }
-
         static Assembly AssemblyCache;
+
+        static Lazy<HttpClient> _lazyClient = new Lazy<HttpClient>();
+        static HttpClient _httpClient => _lazyClient.Value;
 
         /// <summary>
         /// Registers the assembly.
@@ -120,11 +139,19 @@ namespace Xamarin.Forms.Svg
         {
             if (typeHavingResource == null)
             {
+#if NETSTANDARD2_0
+                AssemblyCache = Assembly.GetCallingAssembly();
+#else
                 MethodInfo callingAssemblyMethod = typeof(Assembly).GetTypeInfo().GetDeclaredMethod("GetCallingAssembly");
                 if (callingAssemblyMethod != null)
                 {
                     AssemblyCache = (Assembly)callingAssemblyMethod.Invoke(null, new object[0]);
                 }
+#endif
+            }
+            else
+            {
+                AssemblyCache = typeHavingResource.GetTypeInfo().Assembly;
             }
         }
 
@@ -136,26 +163,18 @@ namespace Xamarin.Forms.Svg
         /// <param name="width">Width.</param>
         /// <param name="height">Height.</param>
         /// <param name="color">Color.</param>
+        [Obsolete("FromSvg is obsolete. Please use FromSvgResource instead.")]
         public static ImageSource FromSvg(string resource, double width, double height, Color color = default(Color))
         {
+#if NETSTANDARD2_0
+            AssemblyCache = AssemblyCache ?? Assembly.GetCallingAssembly();
+#endif
             if (AssemblyCache == null)
             {
-                MethodInfo callingAssemblyMethod = typeof(Assembly).GetTypeInfo().GetDeclaredMethod("GetCallingAssembly");
-                if (callingAssemblyMethod != null)
-                {
-                    AssemblyCache = (Assembly)callingAssemblyMethod.Invoke(null, new object[0]);
-                }
-                else
-                {
-                    return null;
-                }
+                return null;
             }
-            var source = (SvgImageSource)FromSvg(resource, color);
 
-            source.Width = width;
-            source.Height = height;
-
-            return source;
+            return new SvgImageSource { StreamFunc = GetResourceStreamFunc(resource), Source = resource, Width = width, Height = height, Color = color };
         }
 
         /// <summary>
@@ -164,38 +183,180 @@ namespace Xamarin.Forms.Svg
         /// <returns>The svg.</returns>
         /// <param name="resource">Resource.</param>
         /// <param name="color">Color.</param>
+        [Obsolete("FromSvg is obsolete. Please use FromSvgResource instead.")]
         public static ImageSource FromSvg(string resource, Color color = default(Color))
         {
+#if NETSTANDARD2_0
+            AssemblyCache = AssemblyCache ?? Assembly.GetCallingAssembly();
+#endif
             if (AssemblyCache == null)
             {
-                MethodInfo callingAssemblyMethod = typeof(Assembly).GetTypeInfo().GetDeclaredMethod("GetCallingAssembly");
-                if (callingAssemblyMethod != null)
-                {
-                    AssemblyCache = (Assembly)callingAssemblyMethod.Invoke(null, new object[0]);
-                }
-                else
-                {
-                    return null;
-                }
+                return null;
             }
 
+            return new SvgImageSource { StreamFunc = GetResourceStreamFunc(resource), Source = resource, Color = color };
+        }
+
+
+        /// <summary>
+        /// Froms the svg.
+        /// </summary>
+        /// <returns>The svg.</returns>
+        /// <param name="resource">Resource.</param>
+        /// <param name="width">Width.</param>
+        /// <param name="height">Height.</param>
+        /// <param name="color">Color.</param>
+        public static ImageSource FromSvgResource(string resource, double width, double height, Color color = default(Color))
+        {
+#if NETSTANDARD2_0
+            AssemblyCache = AssemblyCache ?? Assembly.GetCallingAssembly();
+#endif
+            if (AssemblyCache == null)
+            {
+                return null;
+            }
+
+            return new SvgImageSource { StreamFunc = GetResourceStreamFunc(resource), Source = resource, Width = width, Height = height, Color = color };
+        }
+
+        /// <summary>
+        /// Froms the svg.
+        /// </summary>
+        /// <returns>The svg.</returns>
+        /// <param name="resource">Resource.</param>
+        /// <param name="color">Color.</param>
+        public static ImageSource FromSvgResource(string resource, Color color = default(Color))
+        {
+#if NETSTANDARD2_0
+            AssemblyCache = AssemblyCache ?? Assembly.GetCallingAssembly();
+#endif
+            if (AssemblyCache == null)
+            {
+                return null;
+            }
+
+            return new SvgImageSource { StreamFunc = GetResourceStreamFunc(resource), Source = resource, Color = color };
+
+        }
+
+        /// <summary>
+        /// Froms the svg URI.
+        /// </summary>
+        /// <returns>The svg URI.</returns>
+        /// <param name="uri">URI.</param>
+        /// <param name="width">Width.</param>
+        /// <param name="height">Height.</param>
+        /// <param name="color">Color.</param>
+        public static ImageSource FromSvgUri(string uri, double width, double height, Color color)
+        {
+            return new SvgImageSource { StreamFunc = GethttpStreamFunc(uri), Source = uri, Width = width, Height = height, Color = color };
+        }
+
+        /// <summary>
+        /// Froms the svg stream.
+        /// </summary>
+        /// <returns>The svg stream.</returns>
+        /// <param name="streamFunc">Stream func.</param>
+        /// <param name="width">Width.</param>
+        /// <param name="height">Height.</param>
+        /// <param name="color">Color.</param>
+        /// <param name="key">Key.</param>
+        public static ImageSource FromSvgStream(Func<Stream> streamFunc, double width, double height, Color color, string key = null)
+        {
+            key = key ?? streamFunc.GetHashCode().ToString();
+            return new SvgImageSource { StreamFunc = token => Task.Run(streamFunc), Width = width, Height = height, Color = color };
+        }
+
+        static Func<CancellationToken, Task<Stream>> GetResourceStreamFunc(string resource)
+        {
             var realResource = GetRealResource(resource);
             if (realResource == null)
             {
                 return null;
             }
+            return token => Task.Run(() => AssemblyCache.GetManifestResourceStream(realResource), token);
 
-            Func<Stream> streamFunc = () => AssemblyCache.GetManifestResourceStream(realResource);
+        }
 
-            return new SvgImageSource { Stream = token => Task.Run(streamFunc, token), Color = color };
-
+        static Func<CancellationToken, Task<Stream>> GethttpStreamFunc(string uri)
+        {
+            return token => Task.Run(async () =>
+            {
+                var response = await _httpClient.GetAsync(uri, token);
+                if (!response.IsSuccessStatusCode)
+                {
+                    Log.Warning("HTTP Request", $"Could not retrieve {uri}, status code {response.StatusCode}");
+                    return null;
+                }
+                // the HttpResponseMessage needs to be disposed of after the calling code is done with the stream 
+                // otherwise the stream may get disposed before the caller can use it
+                return new StreamWrapper(await response.Content.ReadAsStreamAsync().ConfigureAwait(false), response) as Stream;
+            }, token);
         }
 
         static string GetRealResource(string resource)
         {
             return AssemblyCache.GetManifestResourceNames()
                               .FirstOrDefault(x => x.EndsWith(resource, StringComparison.CurrentCultureIgnoreCase));
+        }
 
+        /// <summary>
+        /// Ons the property changed.
+        /// </summary>
+        /// <param name="propertyName">Property name.</param>
+        protected override void OnPropertyChanged(string propertyName)
+        {
+            if (propertyName == StreamFuncProperty.PropertyName)
+            {
+                OnSourceChanged();
+            }
+            else if(propertyName == SourceProperty.PropertyName)
+            {
+                if(string.IsNullOrEmpty(Source)){
+                    return;
+                }
+
+                if(Uri.TryCreate(Source,UriKind.Absolute,out var uri)){
+                    StreamFunc = GethttpStreamFunc(Source);
+                }
+                else{
+                    StreamFunc = GetResourceStreamFunc(Source);
+                }
+
+                //OnSourceChanged();
+            }
+            base.OnPropertyChanged(propertyName);
+        }
+
+        internal virtual async Task<Stream> GetImageStreamAsync(CancellationToken userToken)
+        {
+
+            OnLoadingStarted();
+            userToken.Register(CancellationTokenSource.Cancel);
+
+            Stream imageStream = null;
+            try
+            {
+                using (var stream = await StreamFunc(CancellationTokenSource.Token).ConfigureAwait(false))
+                {
+                    if (stream == null)
+                    {
+                        OnLoadingCompleted(false);
+                        return null;
+                    }
+                    imageStream = await SvgUtility.CreateImage(stream, Width, Height, Color);
+                }
+
+                OnLoadingCompleted(false);
+            }
+            catch (OperationCanceledException oex)
+            {
+                OnLoadingCompleted(true);
+                System.Diagnostics.Debug.WriteLine($"cancel exception {oex.Message}");
+                throw;
+            }
+
+            return imageStream;
         }
     }
 }

@@ -1,5 +1,7 @@
 ﻿using System;
-using NGraphics;
+using System.IO;
+using System.Threading.Tasks;
+using SkiaSharp;
 
 namespace Xamarin.Forms.Svg
 {
@@ -9,13 +11,65 @@ namespace Xamarin.Forms.Svg
     public static class SvgUtility
     {
         /// <summary>
-        /// Calculates the aspect.
+        /// Creates the image.
         /// </summary>
-        /// <returns>The aspect.</returns>
+        /// <returns>The image.</returns>
+        /// <param name="stream">Stream.</param>
+        /// <param name="width">Width.</param>
+        /// <param name="height">Height.</param>
+        /// <param name="color">Color.</param>
+        public static Task<Stream> CreateImage(Stream stream, double width, double height, Color color)
+        {
+            var screenScale = SvgImageSource.ScreenScale;
+
+            var svg = new SkiaSharp.Extended.Svg.SKSvg();
+            svg.Load(stream);
+
+            var size = CalcSize(svg.Picture.CullRect.Size, width, height);
+            var scale = CalcScale(svg.Picture.CullRect.Size, size, screenScale);
+            var matrix = SKMatrix.MakeScale(scale.Item1, scale.Item2);
+
+            using (var bitmap = new SKBitmap((int)(size.Width * screenScale), (int)(size.Height * screenScale)))
+            using (var canvas = new SKCanvas(bitmap))
+            using (var paint = new SKPaint())
+            {
+                if (!color.IsDefault)
+                {
+                    paint.ColorFilter = SKColorFilter.CreateBlendMode(ToSKColor(color), SKBlendMode.SrcIn);
+                }
+
+                canvas.Clear(SKColors.Transparent); // very very important!
+                canvas.DrawPicture(svg.Picture, ref matrix, paint);
+
+                using (var image = SKImage.FromBitmap(bitmap))
+                using (var encoded = image.Encode())
+                {
+                    var imageStream = new MemoryStream();
+                    encoded.SaveTo(imageStream);
+                    imageStream.Position = 0;
+                    return Task.FromResult(imageStream as Stream);
+                }
+            }
+        }
+
+        /// <summary>
+        /// Tos the SKC olor.
+        /// </summary>
+        /// <returns>The SKC olor.</returns>
+        /// <param name="color">Color.</param>
+        public static SKColor ToSKColor(Color color)
+        {
+            return new SKColor((byte)(color.R * 255), (byte)(color.G * 255), (byte)(color.B * 255), (byte)(color.A * 255));
+        }
+
+        /// <summary>
+        /// Calculates the size.
+        /// </summary>
+        /// <returns>The size.</returns>
         /// <param name="size">Size.</param>
         /// <param name="width">Width.</param>
         /// <param name="height">Height.</param>
-        public static NGraphics.Size CalcAspect(NGraphics.Size size, double width, double height)
+        public static SKSize CalcSize(SkiaSharp.SKSize size, double width, double height)
         {
             double w;
             double h;
@@ -39,46 +93,22 @@ namespace Xamarin.Forms.Svg
                 h = height;
             }
 
-            return new NGraphics.Size(w, h);
+            return new SkiaSharp.SKSize((float)w, (float)h);
         }
 
         /// <summary>
-        /// Resize the specified g and size.
+        /// Calculates the scale.
         /// </summary>
-        /// <returns>The resize.</returns>
-        /// <param name="g">The green component.</param>
-        /// <param name="size">Size.</param>
-        public static Graphic Resize(Graphic g, NGraphics.Size size)
+        /// <returns>The scale.</returns>
+        /// <param name="originalSize">Original size.</param>
+        /// <param name="scaledSize">Scaled size.</param>
+        /// <param name="screenScale">Screen scale.</param>
+        public static Tuple<float, float> CalcScale(SkiaSharp.SKSize originalSize, SkiaSharp.SKSize scaledSize, float screenScale)
         {
-            var transform = Transform.AspectFillRect(g.ViewBox, new NGraphics.Rect(0, 0, size.Width, size.Height));
-            return g.TransformGeometry(transform);
-        }
+            var sx = scaledSize.Width * screenScale / originalSize.Width;
+            var sy = scaledSize.Height * screenScale / originalSize.Height;
 
-        /// <summary>
-        /// Applies the color.
-        /// </summary>
-        /// <param name="element">Element.</param>
-        /// <param name="color">Color.</param>
-        public static void ApplyColor(NGraphics.Element element, NGraphics.Color color)
-        {
-            var children = (element as Group)?.Children;
-            if (children != null)
-            {
-                foreach (var child in children)
-                {
-                    ApplyColor(child, color);
-                }
-            }
-
-            if (element?.Pen != null)
-            {
-                element.Pen = new Pen(color, element.Pen.Width);
-            }
-
-            if (element?.Brush != null)
-            {
-                element.Brush = new SolidBrush(color);
-            }
+            return new Tuple<float, float>((float)sx, (float)sy);
         }
     }
 }

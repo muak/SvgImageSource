@@ -1,25 +1,30 @@
-﻿using Prism.Unity;
+﻿using Prism;
+using Prism.Ioc;
+using Prism.Unity;
 using Sample.Views;
 using Xamarin.Forms.Svg;
+using Xamarin.Forms;
 
 namespace Sample
 {
-    public partial class App : PrismApplication
-    {
-        public App(IPlatformInitializer initializer = null) : base(initializer) { }
+	public partial class App : PrismApplication
+	{
+		public App(IPlatformInitializer initializer = null) : base(initializer) { }
+
 
         protected override void OnInitialized()
-        {
-            InitializeComponent();
+		{
+			InitializeComponent();
 
             SvgImageSource.RegisterAssembly();
 
-            NavigationService.NavigateAsync("MainPage");
-        }
+			NavigationService.NavigateAsync("/NavigationPage/MainPage");
+		}
 
-        protected override void RegisterTypes()
+        protected override void RegisterTypes(IContainerRegistry containerRegistry)
         {
-            Container.RegisterTypeForNavigation<MainPage>();
+            containerRegistry.RegisterForNavigation<MainPage>();
+            containerRegistry.RegisterForNavigation<NavigationPage>();
         }
     }
 }
