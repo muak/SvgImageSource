@@ -27,6 +27,7 @@
     <DeviceSpecificBuild>false</DeviceSpecificBuild>
     <MtouchLink>SdkOnly</MtouchLink>
     <MtouchHttpClientHandler>HttpClientHandler</MtouchHttpClientHandler>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
     <DebugSymbols>true</DebugSymbols>
@@ -41,6 +42,7 @@
     <MtouchNoSymbolStrip>true</MtouchNoSymbolStrip>
     <MtouchLink>SdkOnly</MtouchLink>
     <MtouchHttpClientHandler>HttpClientHandler</MtouchHttpClientHandler>
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="System" />
@@ -76,7 +78,7 @@
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\SvgImageSource\SvgImageSource.csproj">
-      <Project>{52EEAF44-C994-4359-B6C9-C20250ACB298}</Project>
+      <Project>{B264FB6A-2A37-46A1-8EB7-6287422360D4}</Project>
       <Name>SvgImageSource</Name>
     </ProjectReference>
   </ItemGroup>

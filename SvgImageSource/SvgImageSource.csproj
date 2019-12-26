@@ -9,6 +9,10 @@
     <DebugSymbols>true</DebugSymbols>
     <DebugType>portable</DebugType>
     <DocumentationFile>bin\Release\netstandard2.0\SvgImageSource.xml</DocumentationFile>
+    <LangVersion>latest</LangVersion>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <LangVersion>latest</LangVersion>
   </PropertyGroup>
   <ItemGroup>
 	<PackageReference Include="Xamarin.Forms" Version="3.0.0.482510" />
