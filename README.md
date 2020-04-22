@@ -10,7 +10,7 @@ Using this library have to install more than or equal Xamarin.Forms 2.4.0.266 -p
 https://www.nuget.org/packages/Xamarin.Forms.Svg/
 
 ```bash
-Install-Package Xamain.Forms.Svg -pre
+Install-Package Xamarin.Forms.Svg -pre
 ```
 
 You need to install this nuget package to PCL project and each platform project.
@@ -22,7 +22,7 @@ You need to install this nuget package to PCL project and each platform project.
 ```csharp
 public override bool FinishedLaunching(UIApplication app, NSDictionary options) 
 {    
-	global::Xamarin.Forms.Forms.Init();
+    global::Xamarin.Forms.Forms.Init();
 
     Xamarin.Forms.Svg.iOS.SvgImage.Init();  //need to write here
 
@@ -40,7 +40,7 @@ protected override void OnCreate(Bundle bundle)
     ...
     global::Xamarin.Forms.Forms.Init(this, bundle);
 
-    Xamarin.Forms.Svg.Droid.SvgImage.Init(); //need to write here
+    Xamarin.Forms.Svg.Droid.SvgImage.Init(this); //need to write here
 
     LoadApplication(new App(new AndroidInitializer()));
 }
@@ -71,7 +71,7 @@ public SomeViewModel(){
 	//specify color
 	Image = SvgImageSource.FromSvg("Resource.some.svg", Color.Red);
 	//specify width height
-	Image = SvgImageSource.FromSvg("Resourece.some.svg", 150, 50)
+	Image = SvgImageSource.FromSvg("Resource.some.svg", 150, 50);
 }
 ```
 
@@ -91,7 +91,7 @@ Resource path is found by backward match.
 	<StackLayout>
         <Image>
             <Image.Source>
-                <svg:SvgImageSource Resource="some.svg" Width=150 Height=50 Color="Red" />
+                <svg:SvgImageSource Source="some.svg" Width="150" Height="150" Color="Red" />
             </Image.Source>
         </Image>
 	</StackLayout> 
