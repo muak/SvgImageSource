@@ -10,7 +10,7 @@ Using this library have to install more than or equal Xamarin.Forms 2.4.0.266 -p
 https://www.nuget.org/packages/Xamarin.Forms.Svg/
 
 ```bash
-Install-Package Xamain.Forms.Svg -pre
+Install-Package Xamarin.Forms.Svg -pre
 ```
 
 You need to install this nuget package to PCL project and each platform project.
